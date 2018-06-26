@@ -78,3 +78,16 @@ def post(request):
         post_form = form.PostForm()
 
     return render(request, 'post.html', locals())
+
+
+def reply(request, post_id):
+    if request.POST.get('content') is not None:
+        models.comment.objects.create(
+            content=request.POST.get('content'),
+            user_who_made=models.User.objects.get(
+                name=request.session['user_name']),
+            which_post=models.Post.objects.get(id=post_id)
+        )
+        return HttpResponse('回覆成功')
+
+    return HttpResponse('回覆失敗')

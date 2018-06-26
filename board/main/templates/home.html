@@ -19,39 +19,37 @@
 
     <body class="template">
         <!-- 導航欄 -->
-        <div>
-            <div class="ui massive fixed teal borderless menu">
-                <div class="ui container">
-                    <div class="header item" href="#">到此一游</div>
-                    <a class="active item" href="/">Home</a>
-                    <a class="item" href="/post">Post</a>
-                    <a class="item" href="/admin">Admin</a>
-                    <div class="right floated item">
-                        <a class="ui blue button mini">
-                            {% if Long %}
-                            <p id='geo'>
-                                <i class="marker icon"></i>Longitude: {{ Long }} Latitude: {{Lat}}</p>
-                            {% else %}
-                            <p id='geo'>
-                                <i class="marker icon"></i>
-                            </p>
-                            {% endif %}
-                        </a>
-                    </div>
-                    {% if request.session.is_login %}
-                    <a class="item" href="/logout">登出</a>
-                    <div href="#" class="item">
-                        <p>当前在线：{{ request.session.user_name }}</p>
-                    </div>
-                    {% else %}
-                    <a class="item" href="/login">登錄</a>
-                    {% endif %}
+
+        <div class="ui massive fixed teal borderless menu">
+            <div class="ui container">
+                <div class="header item" href="#">到此一游</div>
+                <a class="active item" href="/">Home</a>
+                <a class="item" href="/post">Post</a>
+                <a class="item" href="/admin">Admin</a>
+                <div class="right floated item">
+                    <a class="ui blue button mini">
+                        {% if Long %}
+                        <p id='geo'>
+                            <i class="marker icon"></i>Longitude: {{ Long }} Latitude: {{Lat}}</p>
+                        {% else %}
+                        <p id='geo'>
+                            <i class="marker icon"></i>
+                        </p>
+                        {% endif %}
+                    </a>
                 </div>
+                {% if request.session.is_login %}
+                <a class="item" href="/logout">登出</a>
+                <div href="#" class="item">
+                    <p>当前在线：{{ request.session.user_name }}</p>
+                </div>
+                {% else %}
+                <a class="item" href="/login">登錄</a>
+                {% endif %}
             </div>
         </div>
-        <br>
 
-        <div class="ui container center aligned" style="padding-top: 60px;padding-bottom:10px">
+        <div class="ui container center aligned" style="padding-top: 4%;padding-bottom:10px">
             <button class="ui red button" onclick="getLocation()">
                 <i class="marker icon"></i>
                 Location(點我取得你的位置)
@@ -63,7 +61,8 @@
                 {% for post in posts %}
 
                 <div class="card">
-                    <div class="ui small image">
+                    <div class="ui image">
+                        <img src="https://placeimg.com/400/100/any">
                     </div>
                     <div class="content">
                         <a class="header">流水 {{ post.id }} 號</a>
@@ -75,6 +74,49 @@
                             {{ post.content }}
                         </div>
 
+                    </div>
+                    <div class="ui bottom attached button" onclick="$('#comment{{post.id}}').modal({blurring: true}).modal('show')">
+                        <i class="add icon"></i>
+                        觀看回應
+                    </div>
+                    <div class="ui modal" id='comment{{post.id}}'>
+                        <div class="header">流水 {{ post.id }} 號 回響</div>
+                        <div class="content">
+                            <div class="ui comments">
+                                {% for comment in post.comment_set.all %}
+                                <div class="comment">
+                                    <a class="avatar">
+                                        <img src="https://placeimg.com/50/50/face">
+                                    </a>
+                                    <div class="content">
+                                        <a class="author">{{ comment.user_who_made.name }}</a>
+                                        <div class="metadata">
+                                            <span class="date">{{ comment.time }}</span>
+                                        </div>
+                                        <div class="text">
+                                            {{ comment.content }}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <div class="ui pink message">空空如也 等你搶頭香</div>
+                                {% endfor %} {% if request.session.is_login %}
+                                <div class="ui section divider"></div>
+                                <h3 class="ui header">增加回響</h3>
+                                <form class="ui reply form" action="reply/{{ post.id }}" method="POST">
+                                    {% csrf_token %}
+                                    <div class="field">
+                                        <textarea name='content'></textarea>
+                                    </div>
+                                    <button class="ui blue labeled submit icon button" type="submit">
+                                        <i class="icon edit"></i> Add Reply
+                                    </button>
+                                </form>
+                                {% else %}
+                                <div class="ui red message">請登入以便回覆</div>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </div>
 
