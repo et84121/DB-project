@@ -12,3 +12,5 @@ django
  5. python manage.py runserver #啟動debug server(有資料庫後以後只要這行就好了)
 
 ## 自已系統的預設帳密為
+whale
+123
