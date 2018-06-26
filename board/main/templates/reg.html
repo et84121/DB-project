@@ -9,7 +9,7 @@
     <meta content="Semantic-UI, Theme, Design, Template" name="keywords" />
     <meta content="PPType" name="author" />
     <meta content="#ffffff" name="theme-color" />
-    <title>到此一游留言板-登錄</title>
+    <title>到此一游留言板-註冊</title>
     {% load static %}
     <link href="{% static 'semantic/semantic.min.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'css/style.css' %}" rel="stylesheet" , type="text/css">
@@ -23,10 +23,10 @@
       <div class="column">
         <h2 class="ui teal header">
           <div class="content">
-            登入您的賬號
+            註冊您的賬號
           </div>
         </h2>
-        <form class="ui large form" action="login" method="POST">
+        <form class="ui large form" action="reg" method="POST">
           {% csrf_token %} {% if message %}
           <div class="ui compact message">
             <p>{{ message }}</p>
@@ -45,17 +45,12 @@
                 <input type="password" name="password" placeholder="密碼">
               </div>
             </div>
-            <button class="ui fluid large teal submit button" type="submit">登錄</button>
+            <button class="ui fluid large teal submit button" type="submit">註冊</button>
           </div>
 
           <div class="ui error message"></div>
 
         </form>
-
-        <div class="ui message">
-          New to us?
-          <a href="reg"> Sign Up</a>
-        </div>
       </div>
     </div>
   </body>

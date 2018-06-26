@@ -56,6 +56,26 @@ def login(request):
     return render(request, 'login.html', locals())
 
 
+def reg(request):
+    if request.session.get('is_login', None):
+        return redirect("/")
+    if request.method == "POST":
+        login_form = form.UserForm(request.POST)
+        message = "请检查填写的内容！"
+        if login_form.is_valid():
+            username = login_form.cleaned_data['username']
+            password = login_form.cleaned_data['password']
+            if models.User.objects.filter(name=username).exists():
+                message = "已有相同用戶名"
+            else:
+                models.User.objects.create(
+                    name=username,
+                    password=password
+                )
+                return redirect("/")
+    return render(request, 'reg.html', locals())
+
+
 def logout(request):
     if not request.session.get('is_login', None):
         # 如果本来就未登录，也就没有登出一说
