@@ -23,5 +23,6 @@ urlpatterns = [
     path('post', views.post),
     path('login', views.login),
     path('logout', views.logout),
-    path('reply/<int:post_id>', views.reply)
+    path('reply/<int:post_id>', views.reply),
+    path('like/<int:post_id>', views.like),
 ]

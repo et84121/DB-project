@@ -6,9 +6,19 @@ from . import models, form
 
 def index(request):
     if request.method == 'GET':
-        Lat = request.GET.get('Lat')
-        Long = request.GET.get('Long')
-        if Lat is not None:
+        if 'Lat' in request.session:
+            Lat = request.session['Lat']
+            Long = request.session['Long']
+            posts = models.Post.objects.filter(
+                located=models.Location.objects.get(
+                    longitude=Long,
+                    latitude=Lat
+                )
+            )
+        elif 'Lat' in request.GET:
+            Lat = request.GET.get('Lat')
+            Long = request.GET.get('Long')
+
             request.session['Lat'] = Lat
             request.session['Long'] = Long
             posts = models.Post.objects.filter(
@@ -88,6 +98,16 @@ def reply(request, post_id):
                 name=request.session['user_name']),
             which_post=models.Post.objects.get(id=post_id)
         )
-        return HttpResponse('回覆成功')
+        return redirect("/")
 
     return HttpResponse('回覆失敗')
+
+
+def like(request, post_id):
+    people_who_liked = models.Post.objects.get(id=post_id).user_who_liked.all()
+    user = models.User.objects.get(name=request.session['user_name'])
+    if user not in people_who_liked:
+        models.Post.objects.get(id=post_id).user_who_liked.add(user)
+    else:
+        models.Post.objects.get(id=post_id).user_who_liked.remove(user)
+    return HttpResponse('like fail')
