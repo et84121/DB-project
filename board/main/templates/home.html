@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8" />
+        <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+        <meta content="width=1300, initial-scale=1 user-scalable=yes" name="viewport" />
+        <meta content="Semantic-UI-Forest, collection of design, themes and templates for Semantic-UI." name="description" />
+        <meta content="Semantic-UI, Theme, Design, Template" name="keywords" />
+        <meta content="PPType" name="author" />
+        <meta content="#ffffff" name="theme-color" />
+        <title>到此一游留言板-留言</title>
+        {% load static %}
+        <link href="{% static 'semantic/semantic.min.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'css/style.css' %}" rel="stylesheet" , type="text/css">
+        <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+        <script src="{% static 'semantic/semantic.min.js' %}"></script>
+    </head>
+
+    <body class="template">
+        <!-- 導航欄 -->
+        <div>
+            <div class="ui massive fixed teal borderless menu">
+                <div class="ui container">
+                    <div class="header item" href="#">到此一游</div>
+                    <a class="active item" href="/">Home</a>
+                    <a class="item" href="/post">Post</a>
+                    <a class="item" href="/admin">Admin</a>
+                    <div class="right floated item">
+                        <a class="ui blue button mini">
+                            {% if Long %}
+                            <p id='geo'>
+                                <i class="marker icon"></i>Longitude: {{ Long }} Latitude: {{Lat}}</p>
+                            {% else %}
+                            <p id='geo'>
+                                <i class="marker icon"></i>
+                            </p>
+                            {% endif %}
+                        </a>
+                    </div>
+                    {% if request.session.is_login %}
+                    <a class="item" href="/logout">登出</a>
+                    <div href="#" class="item">
+                        <p>当前在线：{{ request.session.user_name }}</p>
+                    </div>
+                    {% else %}
+                    <a class="item" href="/login">登錄</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <div class="ui container center aligned" style="padding-top: 60px;padding-bottom:10px">
+            <button class="ui red button" onclick="getLocation()">
+                <i class="marker icon"></i>
+                Location(點我取得你的位置)
+            </button>
+        </div>
+
+        <div class="ui container">
+            <div class="ui stackable doubling cards">
+                {% for post in posts %}
+
+                <div class="card">
+                    <div class="ui small image">
+                    </div>
+                    <div class="content">
+                        <a class="header">流水 {{ post.id }} 號</a>
+                        <div class="meta">
+                            <a>{{ post.time }}</a>
+                            <a>{{ post.user_who_posted.name }}</a>
+                        </div>
+                        <div class="description">
+                            {{ post.content }}
+                        </div>
+
+                    </div>
+                </div>
+
+                {% empty %} {% endfor %}
+            </div>
+        </div>
+    </body>
+    <footer>
+        <script>
+            var x = document.getElementById("geo");
+
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition, showError);
+                } else {
+                    x.innerHTML = "Geolocation is not supported by this browser.";
+                }
+            }
+
+            function showPosition(position) {
+                x.innerHTML = "Latitude: " + position.coords.latitude +
+                    "   Longitude: " + position.coords.longitude;
+                window.location.replace("/?Lat=" + Math.round(position.coords.latitude) + "&Long=" + Math.round(
+                    position.coords.longitude));
+            }
+
+            function showError(error) {
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        x.innerHTML = "User denied the request for Geolocation."
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        x.innerHTML = "Location information is unavailable."
+                        break;
+                    case error.TIMEOUT:
+                        x.innerHTML = "The request to get user location timed out."
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        x.innerHTML = "An unknown error occurred."
+                        break;
+                }
+            }
+        </script>
+    </footer>
+
+</html>

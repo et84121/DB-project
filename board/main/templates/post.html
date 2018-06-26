@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8" />
+        <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+        <meta content="width=1300, initial-scale=1 user-scalable=yes" name="viewport" />
+        <meta content="Semantic-UI-Forest, collection of design, themes and templates for Semantic-UI." name="description" />
+        <meta content="Semantic-UI, Theme, Design, Template" name="keywords" />
+        <meta content="PPType" name="author" />
+        <meta content="#ffffff" name="theme-color" />
+        <title>到此一游留言板-留言</title>
+        {% load static %}
+        <link href="{% static 'semantic/semantic.min.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'css/style.css' %}" rel="stylesheet" , type="text/css">
+        <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+        <script src="{% static 'semantic/semantic.min.js' %}"></script>
+    </head>
+
+    <body class="template">
+        <div class="ui massive fixed teal borderless menu">
+            <div class="ui container">
+                <a class="header item" href="#">到此一游</a>
+                <a class="item" href="/">Home</a>
+                <a class="active item" href="/post">Post</a>
+                <a class="item" href="/admin">Admin</a>
+                <div class="right floated item">
+                    <a class="ui blue button mini">
+                        {% if Long %}
+                        <p id='geo'>
+                            <i class="marker icon"></i>Longitude: {{ Long }} Latitude: {{Lat}}</p>
+                        {% else %}
+                        <p id='geo'>
+                            <i class="marker icon"></i>
+                        </p>
+                        {% endif %}
+                    </a>
+                </div>
+                {% if request.session.is_login %}
+                <a class="item" href="/logout">登出</a>
+                <div href="#" class="item">
+                    <p>当前在线：{{ request.session.user_name }}</p>
+                </div>
+                {% else %}
+                <a class="item" href="/login">登錄</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="ui aligned center aligned grid " style="padding-top: 80px">
+            <div class="column">
+                {% if request.session.is_login %}
+                <form class="ui huge form" action="/post" method="POST">
+                    {% csrf_token %}
+                    <div class="field">
+                        {% if info %}
+                        <div class="ui compact message">
+                            <p>{{ info }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="field">
+                        <h2 class="ui teal header">
+                            <div class="content">
+                                發表貼文
+                            </div>
+                        </h2>
+                        <textarea name="message" placeholder="説點什麽吧……"></textarea>
+                    </div>
+                    <div class="inline fields">
+                        <label>今天心情如何？</label>
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input type="radio" name="mood" value="good" checked='checked'>
+                                <label>
+                                    <i class="large teal frown outline icon"></i>
+                                    GOOD
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input type="radio" name="mood" value="nothing">
+                                <label>
+                                    <i class="large teal meh outline icon"></i>
+                                    Nothing
+                                </label>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input type="radio" name="mood" value="bad">
+                                <label>
+                                    <i class="large teal smile outline icon"></i>
+                                    Bad
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="ui teal labeled submit icon button" type="submit">
+                        <i class="icon edit"></i> 發表
+                    </button>
+                </form>
+                {% else %}
+                <div class="ui negative message">
+                    <i class="close icon"></i>
+                    <div class="header">
+                        請登入後再發文
+                    </div>
+                    <p>此為實名制系統</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </body>
+    <footer>
+    </footer>
+
+</html>
