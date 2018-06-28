@@ -65,12 +65,19 @@
                         <img src="https://placeimg.com/400/200/girl">
                     </div>
                     <div class="content">
-                        <a class="header">流水 {{ post.id }} 號</a>
+                        <a class="header">流水 {{ post.id }} 號 {% if post.mood.name == 'good' %}
+                            <i class="large teal smile outline icon"></i>
+                            {% elif post.mood.name == 'nothing' %}
+                            <i class="large teal meh outline icon"></i>
+                            {% elif post.mood.name == 'bad' %}
+                            <i class="large teal frown outline icon"></i>
+                            {% endif %}</a>
                         <div class="meta">
                             <a>{{ post.time }}</a>
                             <a>{{ post.user_who_posted.name }}</a>
                         </div>
                         <div class="description">
+
                             {{ post.content }}
 
                         </div>
